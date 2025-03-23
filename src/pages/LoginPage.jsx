@@ -5,9 +5,10 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 function LoginPage({ setIsAuth }) {
     const [ user, setUser ] = useState({
-        username: '',
-        password: ''
-      });
+      username: '',
+      password: ''
+    });
+    
     function handleUser(e) {
       const { name, value } = e.target;
       setUser({//會全部覆蓋值
@@ -26,39 +27,39 @@ function LoginPage({ setIsAuth }) {
             const { token, expired } = res.data;
             document.cookie = `camiToken=${token}; expires='${new Date(expired)}'; path=/`;
 
-            axios.defaults.headers.common['Authorization'] = token;//帶入 token
-
-            //取得產品列表
-            // getProducts();
-
-            setIsAuth(true);
+            if (token) {
+              axios.defaults.headers.common['Authorization'] = token;//帶入 token
+              setIsAuth(true);
+            }
         
         } catch (error) {
-          console.log('登入失敗'); 
+        console.log('登入失敗');
         
         }
     }
 
-    const checkUserLogin = async() => {
-        try {
-          await axios.post(`${BASE_URL}/v2/api/user/check`);
-        //   getProducts();
-          setIsAuth(true);
+
+    // const checkUserLogin = async() => {
+    //     try {
+    //       await axios.post(`${BASE_URL}/v2/api/user/check`);
+    //       // setIsAuth(true);
           
-        } catch (error) {
-          console.log(error);
-          alert('登入失敗，請重新登入！');
-        }
-      }
+    //     } catch (error) {
+    //       // console.log(error);
+    //       console.log('登入失敗，請重新登入！');
+    //     }
+    //   }
     
-    useEffect(() => {
-        const token = document.cookie.replace(
-            /(?:(?:^|.*;\s*)camiToken\s*\=\s*([^;]*).*$)|^.*$/,
-            "$1",
-        );
-        axios.defaults.headers.common['Authorization'] = token;
-        checkUserLogin();
-    }, [])
+    // useEffect(() => {
+    //     const token = document.cookie.replace(
+    //         /(?:(?:^|.*;\s*)camiToken\s*\=\s*([^;]*).*$)|^.*$/,
+    //         "$1",
+    //     );
+    //     if (token) {
+    //       axios.defaults.headers.common['Authorization'] = token;
+    //       checkUserLogin();
+    //     }
+    // }, [])
     
     
 
